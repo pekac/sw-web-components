@@ -26,7 +26,9 @@ class Layout extends HTMLElement {
       <header>Header</header>
       <div style="display: flex; flex-direction: row; flex-grow: 1;">
         <side-nav></side-nav>
-        <main>{children}</main>
+        <main>
+          <slot></slot>
+        </main>
       </div>
     </div>;
   }

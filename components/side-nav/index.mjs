@@ -1,29 +1,5 @@
 "use strict";
 
-const style = document.createElement("style");
-style.textContent = `
-  .side-nav {
-    height: 100%;
-  }
-
-  .nav-inner {
-    list-style: none;
-    padding: 25px;
-    margin: 0;
-  }
-
-  .nav-item {
-    padding: 10px 0;
-    margin-bottom: 10px;
-  }
-
-  .nav-link {
-    color: #fff;
-    font-weight: bold;
-    text-decoration: none;
-  }
-`;
-
 class SideNav extends HTMLElement {
   static observedAttributes = ["links"];
 
@@ -31,7 +7,7 @@ class SideNav extends HTMLElement {
     super();
 
     this.attachShadow({ mode: "open" });
-    this.shadowRoot.appendChild(style);
+    this.attachStyles("../components/side-nav/style.css"); // fix
   }
 
   get links() {
@@ -40,6 +16,16 @@ class SideNav extends HTMLElement {
 
   set links(value) {
     this.setAttribute("links", JSON.stringify(value));
+  }
+
+  attachStyles(filePath) {
+    /* extend class with method */
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.type = "text/css";
+    link.href = filePath;
+
+    this.shadowRoot.appendChild(link);
   }
 
   /* mount */
