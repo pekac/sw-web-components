@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Page One</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <script src="../components/side-nav.mjs" type="module"></script>
+    <script src="../components/liquid-drip.mjs" type="module"></script>
+</head>
+<body>
+    <div style="display: flex; flex-direction: column; min-height: 100vh; gap: 0;">
+        <header style="padding: 20px; text-align:center; color: white;">
+            <h3>Header</h3></header>
+        <div style="display: flex; flex-direction: row; flex-grow: 1;">
+            <side-nav links='[{"title": "Page 2", "url": "/pages/page2.html"}, {"title": "Favorites", "url": "/favorites.html"}, {"title": "Search", "url": "/search.html"}]'></side-nav>
+            <main class="main-content">
+                <h1>Page One</h1>
+                <p>Main content area of this wonderful page 1.</p>
+                <div style="display: flex;">
+                    <liquid-drip></liquid-drip> 
+                    <liquid-drip></liquid-drip> 
+                    <liquid-drip></liquid-drip> 
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+</html>
