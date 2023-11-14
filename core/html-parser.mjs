@@ -1,22 +1,9 @@
-import {
-  PARSER_STATE,
-  isCloseTagEnd,
-  isCloseTagStart,
-  isOpenTagEnd,
-  isOpenTagStart,
-  isReadingElement,
-  isReadingInnerContent,
-  isSelfTagEnd,
-} from "./parser-state.mjs";
+import { PARSER_STATE, transition } from "./parser-state.mjs";
 
 const attributePattern = /(\S+?)=['"]([^'"]*?)['"]/g;
 
 function createElement(openTag) {
   const [tag, attrsText = ""] = openTag.split(/ (.+)/);
-
-  console.log("tag", tag);
-  console.log("attrsText", attrsText);
-
   const element = document.createElement(tag);
 
   const matches = attrsText.matchAll(attributePattern);
@@ -31,64 +18,57 @@ function createElement(openTag) {
 function html(markup) {
   const parentStack = [];
   let dom = null;
-  let state = PARSER_STATE.INIT;
   let currentTag = "";
   let innerContent = "";
+  let state = PARSER_STATE.INIT;
   for (const char of markup) {
-    if (isOpenTagStart(char)) {
-      state = PARSER_STATE.OPEN_TAG_START;
-      continue;
-    }
+    state = transition(state, char);
 
-    if (isOpenTagEnd(state, char)) {
-      state = PARSER_STATE.OPEN_TAG_END;
-      const element = createElement(currentTag);
+    switch (state) {
+      case PARSER_STATE.READING_ELEMENT: {
+        currentTag += char;
+        break;
+      }
 
-      if (dom === null) {
-        dom = element;
-      } else {
+      case PARSER_STATE.INNER_CONTENT: {
+        if (char !== " ") {
+          innerContent += char;
+        }
+        break;
+      }
+
+      case PARSER_STATE.OPEN_TAG_END: {
+        const element = createElement(currentTag);
+        if (dom === null) {
+          dom = element;
+        } else {
+          const parent = parentStack[parentStack.length - 1];
+          parent.appendChild(element);
+        }
+
+        parentStack.push(element);
+        currentTag = "";
+        break;
+      }
+
+      case PARSER_STATE.CLOSE_TAG_START: {
         const parent = parentStack[parentStack.length - 1];
-        parent.appendChild(element);
+        if (parent && innerContent !== "") {
+          parent.innerHTML = innerContent;
+          innerContent = "";
+        }
+        break;
       }
 
-      parentStack.push(element);
-      currentTag = "";
-      continue;
-    }
-
-    if (isSelfTagEnd(state, char)) {
-      state = PARSER_STATE.SELF_TAG_END;
-      continue;
-    }
-
-    if (isCloseTagStart(state, char)) {
-      state = PARSER_STATE.CLOSE_TAG_START;
-      const parent = parentStack[parentStack.length - 1];
-      if (parent && innerContent !== "") {
-        parent.innerHTML = innerContent;
-        innerContent = "";
+      case PARSER_STATE.CLOSE_TAG_END: {
+        parentStack.pop();
+        break;
       }
-      continue;
-    }
 
-    if (isCloseTagEnd(state, char)) {
-      parentStack.pop();
-      state = PARSER_STATE.CLOSE_TAG_END;
-      continue;
-    }
-
-    if (isReadingElement(state, char)) {
-      state = PARSER_STATE.READING_ELEMENT;
-      currentTag += char;
-      continue;
-    }
-
-    if (isReadingInnerContent(state, char)) {
-      state = PARSER_STATE.INNER_CONTENT;
-      if (char !== " ") {
-        innerContent += char;
-      }
-      continue;
+      case PARSER_STATE.OPEN_TAG_START:
+      case PARSER_STATE.SELF_TAG_END:
+      default:
+        continue;
     }
   }
 

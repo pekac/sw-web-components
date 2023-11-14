@@ -46,13 +46,36 @@ function isReadingInnerContent(state, char) {
   );
 }
 
-export {
-  PARSER_STATE,
-  isOpenTagStart,
-  isCloseTagStart,
-  isSelfTagEnd,
-  isOpenTagEnd,
-  isCloseTagEnd,
-  isReadingElement,
-  isReadingInnerContent,
-};
+function transition(state = PARSER_STATE.INIT, char) {
+  if (isOpenTagStart(char)) {
+    return PARSER_STATE.OPEN_TAG_START;
+  }
+
+  if (isOpenTagEnd(state, char)) {
+    return PARSER_STATE.OPEN_TAG_END;
+  }
+
+  if (isSelfTagEnd(state, char)) {
+    return PARSER_STATE.SELF_TAG_END;
+  }
+
+  if (isCloseTagStart(state, char)) {
+    return PARSER_STATE.CLOSE_TAG_START;
+  }
+
+  if (isCloseTagEnd(state, char)) {
+    return PARSER_STATE.CLOSE_TAG_END;
+  }
+
+  if (isReadingElement(state, char)) {
+    return PARSER_STATE.READING_ELEMENT;
+  }
+
+  if (isReadingInnerContent(state, char)) {
+    return PARSER_STATE.INNER_CONTENT;
+  }
+
+  return PARSER_STATE.INIT;
+}
+
+export { PARSER_STATE, transition };
