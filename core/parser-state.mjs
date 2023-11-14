@@ -39,6 +39,13 @@ function isReadingElement(state, char) {
   );
 }
 
+function isReadingInnerContent(state, char) {
+  return (
+    (!SPECIAL_CHARS.has(char) && state === PARSER_STATE.OPEN_TAG_END) ||
+    state === PARSER_STATE.INNER_CONTENT
+  );
+}
+
 export {
   PARSER_STATE,
   isOpenTagStart,
@@ -47,4 +54,5 @@ export {
   isOpenTagEnd,
   isCloseTagEnd,
   isReadingElement,
+  isReadingInnerContent,
 };

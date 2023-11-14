@@ -5,6 +5,7 @@ import {
   isOpenTagEnd,
   isOpenTagStart,
   isReadingElement,
+  isReadingInnerContent,
   isSelfTagEnd,
 } from "./parser-state.mjs";
 
@@ -20,11 +21,7 @@ function createElement(openTag) {
 
   const matches = attrsText.matchAll(attributePattern);
   const arr = [...matches];
-  console.log("arr", arr);
   for (const [_, name, value] of arr) {
-    console.log("_: ", _);
-    console.log("name: ", name);
-    console.log("value: ", value);
     element.setAttribute(name, value);
   }
 
@@ -36,10 +33,8 @@ function html(markup) {
   let dom = null;
   let state = PARSER_STATE.INIT;
   let currentTag = "";
-  console.log("markup", markup);
+  let innerContent = "";
   for (const char of markup) {
-    console.log("currentTag: ", currentTag);
-    console.log("char: ", char);
     if (isOpenTagStart(char)) {
       state = PARSER_STATE.OPEN_TAG_START;
       continue;
@@ -68,6 +63,11 @@ function html(markup) {
 
     if (isCloseTagStart(state, char)) {
       state = PARSER_STATE.CLOSE_TAG_START;
+      const parent = parentStack[parentStack.length - 1];
+      if (parent && innerContent !== "") {
+        parent.innerHTML = innerContent;
+        innerContent = "";
+      }
       continue;
     }
 
@@ -78,9 +78,17 @@ function html(markup) {
     }
 
     if (isReadingElement(state, char)) {
-      console.log("char in reading: ", char);
       state = PARSER_STATE.READING_ELEMENT;
       currentTag += char;
+      continue;
+    }
+
+    if (isReadingInnerContent(state, char)) {
+      state = PARSER_STATE.INNER_CONTENT;
+      if (char !== " ") {
+        innerContent += char;
+      }
+      continue;
     }
   }
 
