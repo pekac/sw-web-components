@@ -9,6 +9,8 @@ const PARSER_STATE = {
   READING_ELEMENT: 6,
 };
 
+const SPECIAL_CHARS = new Set(["<", "/", ">"]);
+
 function isOpenTagStart(char) {
   return char === "<";
 }
@@ -29,8 +31,12 @@ function isCloseTagEnd(state, char) {
   return char === ">" && state === PARSER_STATE.CLOSE_TAG_START;
 }
 
-function isReadingElement(state) {
-  return state === PARSER_STATE.OPEN_TAG_START;
+function isReadingElement(state, char) {
+  return (
+    (state === PARSER_STATE.OPEN_TAG_START ||
+      state === PARSER_STATE.READING_ELEMENT) &&
+    !SPECIAL_CHARS.has(char)
+  );
 }
 
 export {

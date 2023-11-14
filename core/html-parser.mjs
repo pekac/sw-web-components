@@ -11,11 +11,20 @@ import {
 const attributePattern = /(\S+?)=['"]([^'"]*?)['"]/g;
 
 function createElement(openTag) {
-  const [tag, attrsText] = openTag.split(/ (.+)/);
+  const [tag, attrsText = ""] = openTag.split(/ (.+)/);
+
+  console.log("tag", tag);
+  console.log("attrsText", attrsText);
+
   const element = document.createElement(tag);
 
   const matches = attrsText.matchAll(attributePattern);
-  for (const [_, name, value] of matches) {
+  const arr = [...matches];
+  console.log("arr", arr);
+  for (const [_, name, value] of arr) {
+    console.log("_: ", _);
+    console.log("name: ", name);
+    console.log("value: ", value);
     element.setAttribute(name, value);
   }
 
@@ -27,7 +36,10 @@ function html(markup) {
   let dom = null;
   let state = PARSER_STATE.INIT;
   let currentTag = "";
+  console.log("markup", markup);
   for (const char of markup) {
+    console.log("currentTag: ", currentTag);
+    console.log("char: ", char);
     if (isOpenTagStart(char)) {
       state = PARSER_STATE.OPEN_TAG_START;
       continue;
@@ -65,11 +77,14 @@ function html(markup) {
       continue;
     }
 
-    if (isReadingElement(state)) {
+    if (isReadingElement(state, char)) {
+      console.log("char in reading: ", char);
       state = PARSER_STATE.READING_ELEMENT;
       currentTag += char;
     }
   }
+
+  return dom;
 }
 
 export { html };
