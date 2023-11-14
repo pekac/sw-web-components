@@ -15,6 +15,26 @@ function createElement(openTag) {
   return element;
 }
 
+/* note: not great, modifying by ref */
+function attachInnerHtml(parentStack = [], innerContent = "") {
+  const parent = parentStack[parentStack.length - 1];
+  if (parent && innerContent !== "") {
+    parent.innerHTML = innerContent;
+    innerContent = "";
+  }
+}
+
+function appendElement(dom, parentStack, element) {
+  if (dom === null) {
+    dom = element;
+  } else {
+    const parent = parentStack[parentStack.length - 1];
+    parent.appendChild(element);
+  }
+
+  parentStack.push(element);
+}
+
 function html(markup) {
   const parentStack = [];
   let dom = null;
@@ -39,24 +59,13 @@ function html(markup) {
 
       case PARSER_STATE.OPEN_TAG_END: {
         const element = createElement(currentTag);
-        if (dom === null) {
-          dom = element;
-        } else {
-          const parent = parentStack[parentStack.length - 1];
-          parent.appendChild(element);
-        }
-
-        parentStack.push(element);
+        appendElement(dom, parentStack, element);
         currentTag = "";
         break;
       }
 
       case PARSER_STATE.CLOSE_TAG_START: {
-        const parent = parentStack[parentStack.length - 1];
-        if (parent && innerContent !== "") {
-          parent.innerHTML = innerContent;
-          innerContent = "";
-        }
+        attachInnerHtml(parentStack, innerContent);
         break;
       }
 
