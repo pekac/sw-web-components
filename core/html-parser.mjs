@@ -18,9 +18,12 @@ function createElement(openTag) {
   for (const [_, name, value] of matches) {
     element.setAttribute(name, value);
   }
+
+  return element;
 }
 
 function html(markup) {
+  const parentStack = [];
   let dom = null;
   let state = PARSER_STATE.INIT;
   let currentTag = "";
@@ -33,6 +36,15 @@ function html(markup) {
     if (isOpenTagEnd(state, char)) {
       state = PARSER_STATE.OPEN_TAG_END;
       const element = createElement(currentTag);
+
+      if (dom === null) {
+        dom = element;
+      } else {
+        const parent = parentStack[parentStack.length - 1];
+        parent.appendChild(element);
+      }
+
+      parentStack.push(element);
       currentTag = "";
       continue;
     }
@@ -48,6 +60,7 @@ function html(markup) {
     }
 
     if (isCloseTagEnd(state, char)) {
+      parentStack.pop();
       state = PARSER_STATE.CLOSE_TAG_END;
       continue;
     }

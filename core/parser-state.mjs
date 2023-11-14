@@ -22,11 +22,7 @@ function isSelfTagEnd(state, char) {
 }
 
 function isOpenTagEnd(state, char) {
-  return (
-    char === ">" &&
-    (state === PARSER_STATE.READING_ELEMENT ||
-      state === PARSER_STATE.SELF_TAG_END)
-  );
+  return char === ">" && state === PARSER_STATE.READING_ELEMENT;
 }
 
 function isCloseTagEnd(state, char) {
