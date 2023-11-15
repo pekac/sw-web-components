@@ -1,15 +1,14 @@
 const PARSER_STATE = {
-  INIT: -1,
-  OPEN_TAG_START: 0,
-  OPEN_TAG_END: 1,
-  SELF_TAG_END: 2,
-  CLOSE_TAG_START: 3,
-  CLOSE_TAG_END: 4,
-  INNER_CONTENT: 5,
-  READING_ELEMENT: 6,
+  INIT: "INIT",
+  OPEN_TAG_START: "OPEN_TAG_START",
+  OPEN_TAG_END: "OPEN_TAG_END",
+  CLOSE_TAG_START: "CLOSE_TAG_START",
+  CLOSE_TAG_END: "CLOSE_TAG_END",
+  INNER_CONTENT: "INNER_CONTENT",
+  READING_ELEMENT: "READING_ELEMENT",
 };
 
-const SPECIAL_CHARS = new Set(["<", "/", ">"]);
+const SPECIAL_CHARS = new Set(["<", ">"]);
 
 function isOpenTagStart(char) {
   return char === "<";
@@ -17,10 +16,6 @@ function isOpenTagStart(char) {
 
 function isCloseTagStart(state, char) {
   return char === "/" && state === PARSER_STATE.OPEN_TAG_START;
-}
-
-function isSelfTagEnd(state, char) {
-  return char === "/" && state === PARSER_STATE.READING_ELEMENT;
 }
 
 function isOpenTagEnd(state, char) {
@@ -53,10 +48,6 @@ function transition(state = PARSER_STATE.INIT, char) {
 
   if (isOpenTagEnd(state, char)) {
     return PARSER_STATE.OPEN_TAG_END;
-  }
-
-  if (isSelfTagEnd(state, char)) {
-    return PARSER_STATE.SELF_TAG_END;
   }
 
   if (isCloseTagStart(state, char)) {

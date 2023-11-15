@@ -1,14 +1,20 @@
 import { PARSER_STATE, transition } from "./parser-state.mjs";
 
-const attributePattern = /(\S+?)=['"]([^'"]*?)['"]/g;
+/* combine patterns into 1 */
+const attributePattern = /(\S+?)=["]([^"]*?)["]/g;
+const jsonPattern = /(\S+?)=[']([^']*?)[']/g;
 
 function createElement(openTag) {
   const [tag, attrsText = ""] = openTag.split(/ (.+)/);
   const element = document.createElement(tag);
 
   const matches = attrsText.matchAll(attributePattern);
-  const arr = [...matches];
-  for (const [_, name, value] of arr) {
+  for (const [_, name, value] of matches) {
+    element.setAttribute(name, value);
+  }
+
+  const matchesJson = attrsText.matchAll(jsonPattern);
+  for (const [_, name, value] of matchesJson) {
     element.setAttribute(name, value);
   }
 
@@ -21,7 +27,9 @@ function html(markup) {
   let currentTag = "";
   let innerContent = "";
   let state = PARSER_STATE.INIT;
-  for (const char of markup) {
+  for (let i = 0; i < markup.length; i++) {
+    const prevChar = i > 0 ? markup[i - 1] : null;
+    const char = markup[i];
     state = transition(state, char);
 
     switch (state) {
@@ -61,12 +69,13 @@ function html(markup) {
       }
 
       case PARSER_STATE.CLOSE_TAG_END: {
-        parentStack.pop();
+        if (prevChar !== "/") {
+          parentStack.pop();
+        }
         break;
       }
 
       case PARSER_STATE.OPEN_TAG_START:
-      case PARSER_STATE.SELF_TAG_END:
       default:
         continue;
     }
