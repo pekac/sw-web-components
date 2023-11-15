@@ -4,15 +4,20 @@
     <meta charset="UTF-8">
     <title>Page Two</title>
     <link rel="stylesheet" href="../styles/main.css">
+    <script src="../components/liquid-drip/index.mjs" type="module"></script>
+    <script src="../components/side-nav/index.mjs" type="module"></script>
+    <script src="../components/main-layout/index.mjs" type="module"></script>
 </head>
 <body>
-    <side-nav links='[{"title": "Page 1", "url": "/pages/page1.html"}, {"title": "Favorites", "url": "/favorites.html"}, {"title": "Search", "url": "/search.html"}]'></side-nav>
-
-    <div class="main-content">
+    <main-layout>
         <h1>Crazy Woke Page 2 bro</h1>
-        <p>Be careful what you say here... Shit may be offensive</p>
-    </div>
-
-    <script src="../components/side-nav.mjs" type="module"></script>
+        <p><b>Be careful what you say here... Shit may be offensive</b></p>
+        <div style="display: flex;">
+            <liquid-drip></liquid-drip> 
+            <liquid-drip></liquid-drip> 
+            <liquid-drip></liquid-drip> 
+        </div>
+    </main-layout>
 </body>
 </html>
+

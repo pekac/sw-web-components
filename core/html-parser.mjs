@@ -40,7 +40,7 @@ function html(markup) {
       }
 
       case PARSER_STATE.INNER_CONTENT: {
-        if (char !== " ") {
+        if (innerContent.length > 0 || char !== " ") {
           innerContent += char;
         }
         break;

@@ -7,11 +7,15 @@ body {
 }
 
 body {
-  background-color: rgb(23, 23, 23);
   font-family: "Raleway", sans-serif;
+  color: #6cd2ff;
   letter-spacing: 0.08em;
 }
 
 h3 {
   margin: 0;
+}
+
+a {
+  text-decoration: none;
 }

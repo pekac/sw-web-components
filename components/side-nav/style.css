@@ -1,5 +1,6 @@
 .side-nav {
   height: 100%;
+  border: 1px solid #6cd2ff;
 }
 
 .nav-inner {
@@ -14,7 +15,7 @@
 }
 
 .nav-link {
-  color: #fff;
+  color: #6cd2ff;
   font-weight: bold;
   text-decoration: none;
 }
