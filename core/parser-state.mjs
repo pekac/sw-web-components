@@ -3,7 +3,6 @@ const PARSER_STATE = {
   OPEN_TAG_START: "OPEN_TAG_START",
   OPEN_TAG_END: "OPEN_TAG_END",
   CLOSE_TAG_START: "CLOSE_TAG_START",
-  CLOSE_TAG_END: "CLOSE_TAG_END",
   INNER_CONTENT: "INNER_CONTENT",
   READING_ELEMENT: "READING_ELEMENT",
 };
@@ -20,10 +19,6 @@ function isCloseTagStart(state, char) {
 
 function isOpenTagEnd(state, char) {
   return char === ">" && state === PARSER_STATE.READING_ELEMENT;
-}
-
-function isCloseTagEnd(state, char) {
-  return char === ">" && state === PARSER_STATE.CLOSE_TAG_START;
 }
 
 function isReadingElement(state, char) {
@@ -52,10 +47,6 @@ function transition(state = PARSER_STATE.INIT, char) {
 
   if (isCloseTagStart(state, char)) {
     return PARSER_STATE.CLOSE_TAG_START;
-  }
-
-  if (isCloseTagEnd(state, char)) {
-    return PARSER_STATE.CLOSE_TAG_END;
   }
 
   if (isReadingElement(state, char)) {
