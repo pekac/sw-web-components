@@ -1,18 +1,23 @@
 "use strict";
 
-/* core */
 import { html } from "../../core/html-parser.mjs";
-/* components */
-
-const style = document.createElement("style");
-style.textContent = ``;
 
 class MainLayout extends HTMLElement {
   constructor() {
     super();
 
     this.attachShadow({ mode: "open" });
-    this.shadowRoot.appendChild(style);
+    this.attachStyles("../components/main-layout/style.css");
+  }
+
+  attachStyles(filePath) {
+    /* extend class with method */
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.type = "text/css";
+    link.href = filePath;
+
+    this.shadowRoot.appendChild(link);
   }
 
   /* mount */
@@ -27,12 +32,12 @@ class MainLayout extends HTMLElement {
 
   render() {
     const template = html(`
-      <div style="display: flex; flex-direction: column; min-height: 100vh; gap: 0;">
-        <header style="padding: 20px; text-align:center; color: white;">
+      <div class="layout">
+        <header class="header">
           <h3>Header</h3>
         </header>
-        <div style="display: flex; flex-direction: row; flex-grow: 1;">
-          <side-nav links='[{"title": "Page 2","url": "/pages/page2.html"}, {"title": "Favorites", "url": "/favorites.html"}, {"title": "Search", "url": "/search.html"}]'>
+        <div class="main">
+          <side-nav links='[{"title": "Page 1","url": "/pages/page1.html"},{"title": "Page 2","url": "/pages/page2.html"}]'>
           </side-nav>
           <main class="main-content">
             <slot></slot>
