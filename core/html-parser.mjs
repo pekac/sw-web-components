@@ -1,6 +1,9 @@
 import { PARSER_STATE, transition } from "./parser-state.mjs";
 
-/* combine patterns into 1 */
+/* TODO: 
+- [ ] combine patterns into 1
+- [ ] add tests for parser
+*/
 const attributePattern = /(\S+?)=["]([^"]*?)["]/g;
 const jsonPattern = /(\S+?)=[']([^']*?)[']/g;
 
@@ -27,9 +30,7 @@ function html(markup) {
   let currentTag = "";
   let innerContent = "";
   let state = PARSER_STATE.INIT;
-  for (let i = 0; i < markup.length; i++) {
-    const prevChar = i > 0 ? markup[i - 1] : null;
-    const char = markup[i];
+  for (const char of markup) {
     state = transition(state, char);
 
     switch (state) {
@@ -65,13 +66,7 @@ function html(markup) {
           parent.innerHTML = innerContent;
           innerContent = "";
         }
-        break;
-      }
-
-      case PARSER_STATE.CLOSE_TAG_END: {
-        if (prevChar !== "/") {
-          parentStack.pop();
-        }
+        parentStack.pop();
         break;
       }
 
