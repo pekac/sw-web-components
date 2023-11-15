@@ -1,6 +1,6 @@
 "use strict";
 
-const NUM_OF_BLOBS = 8;
+import { html } from "../../core/html-parser.mjs";
 
 const svgCrapo = `<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="0">
   <defs>
@@ -45,41 +45,26 @@ class LiquidDrip extends HTMLElement {
     console.log("Liquid removed from page.");
   }
 
-  generateBlobs() {
-    const blobs = [];
-    let num = NUM_OF_BLOBS;
-    while (num > 0) {
-      const blob = document.createElement("div");
-      blob.classList.add("blob");
-
-      blobs.push(blob);
-
-      num--;
-    }
-
-    return blobs;
-  }
-
   render() {
-    const container = document.createElement("div");
-    container.classList.add("container");
-
-    const blobContainer = document.createElement("div");
-    blobContainer.classList.add("blobs");
-
-    const title = document.createElement("h1");
-    title.classList.add("text");
-    title.innerHTML = "LIQUID<br>DRIP";
-
-    const liquid = document.createElement("div");
-    liquid.classList.add("liquid");
-
-    const blobs = this.generateBlobs();
-
-    blobContainer.appendChild(liquid);
-    for (const blob of blobs) {
-      blobContainer.appendChild(blob);
-    }
+    const template = html(`
+      <div class="container">
+        <div class="blobs">
+          <div class="liquid"></div>
+          <div class="blob"></div>
+          <div class="blob"></div>
+          <div class="blob"></div>
+          <div class="blob"></div>
+          <div class="blob"></div>
+          <div class="blob"></div>
+          <div class="blob"></div>
+          <div class="blob"></div>
+        </div>   
+        <h1 class="title">
+          LIQUID DRIP
+        </h1>
+        <a class="credits" href="https://codepen.io/pareshd/pen/xgOEQb">Drip credits</a>
+      </div>
+    `);
 
     const svgElement = document.createElementNS(
       "http://www.w3.org/2000/svg",
@@ -87,10 +72,8 @@ class LiquidDrip extends HTMLElement {
     );
     svgElement.innerHTML = svgCrapo;
 
-    container.appendChild(blobContainer);
-    container.appendChild(title);
-    container.appendChild(svgElement);
-    this.shadowRoot.appendChild(container);
+    template.appendChild(svgElement);
+    this.shadowRoot.appendChild(template);
   }
 }
 

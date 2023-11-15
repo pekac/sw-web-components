@@ -13,13 +13,25 @@ b {
   box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.22);
 }
 
-.text {
+.credits {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 5px;
+  color: #6cd2ff;
+  font-weight: bold;
+  text-decoration: none;
+  text-align: center;
+}
+
+.title {
   position: absolute;
   left: 50%;
   top: 45%;
   transform: translate(-50%, -50%);
   text-align: center;
   color: #6cd2ff;
+  word-break: keep-all;
   font-size: 64px;
   font-weight: 900;
 }
