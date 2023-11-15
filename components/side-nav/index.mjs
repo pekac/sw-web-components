@@ -1,5 +1,7 @@
 "use strict";
 
+import { html } from "../../core/html-parser.mjs";
+
 class SideNav extends HTMLElement {
   static observedAttributes = ["links"];
 
@@ -45,39 +47,27 @@ class SideNav extends HTMLElement {
     console.log("Nav removed from page.");
   }
 
-  createNavLink(link) {
-    const li = document.createElement("li");
-    li.classList.add("nav-item");
-
-    const a = document.createElement("a");
-    a.classList.add("nav-link");
-    a.href = link.url;
-    a.innerHTML = link.title;
-
-    li.appendChild(a);
-    return li;
-  }
-
   render() {
-    const nav = document.createElement("nav");
-    nav.classList.add("side-nav");
-
-    const navContent = document.createElement("ul");
-    navContent.classList.add("nav-inner");
-    const linkItems = this.links.map(this.createNavLink);
-
-    for (const link of linkItems) {
-      navContent.appendChild(link);
-    }
-
-    nav.appendChild(navContent);
+    const template = html(`
+      <nav class="side-nav">
+        <ul class="nav-inner">
+          ${this.links.map(
+            ({ url, title }) => `
+              <li class="nav-item">
+                <a class="nav-link" href="${url}">${title}</a>
+              </li>
+            `
+          )}
+        </ul>
+      </nav>
+    `);
 
     const prevNav = this.shadowRoot.querySelector("nav.side-nav");
     if (prevNav) {
       this.shadowRoot.removeChild(prevNav);
     }
 
-    this.shadowRoot.appendChild(nav);
+    this.shadowRoot.appendChild(template);
   }
 }
 

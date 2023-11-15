@@ -25,34 +25,21 @@ class MainLayout extends HTMLElement {
     console.log("Layout removed from page.");
   }
 
-  /* 
+  render() {
+    const template = html(`
       <div style="display: flex; flex-direction: column; min-height: 100vh; gap: 0;">
         <header style="padding: 20px; text-align:center; color: white;">
           <h3>Header</h3>
         </header>
         <div style="display: flex; flex-direction: row; flex-grow: 1;">
-          <side-nav links='[{"title": "Page 2", "url": "/pages/page2.html"}, {"title": "Favorites", "url": "/favorites.html"}, {"title": "Search", "url": "/search.html"}]'></side-nav>
+          <side-nav links='[{"title": "Page 2","url": "/pages/page2.html"}, {"title": "Favorites", "url": "/favorites.html"}, {"title": "Search", "url": "/search.html"}]'>
+          </side-nav>
           <main class="main-content">
             <slot></slot>
           </main>
         </div>
       </div>
-  */
-
-  render() {
-    const template = html(
-      `<div style="display: flex; flex-direction: column; min-height: 100vh; gap: 0;">
-      <header style="padding: 20px; text-align:center; color: white;">
-        <h3>Header</h3>
-      </header>
-      <div style="display: flex; flex-direction: row; flex-grow: 1;">
-        <side-nav links="[]"></side-nav>
-        <main class="main-content">
-          <slot></slot>
-        </main>
-      </div>
-    </div>`
-    );
+    `);
 
     this.shadowRoot.appendChild(template);
   }
