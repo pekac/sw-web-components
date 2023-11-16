@@ -1,4 +1,4 @@
-import { PARSER_STATE, transition } from "./parser-state.mjs";
+import { PARSER_STATE, transition } from "./state.mjs";
 
 /* TODO: 
 - [ ] combine patterns into 1
