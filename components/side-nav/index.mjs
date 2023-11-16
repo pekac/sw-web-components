@@ -1,6 +1,9 @@
 "use strict";
-
-import { html } from "../../core/html-parser.mjs";
+/* style */
+import style from "./style.css" assert { type: "css" };
+/* core */
+import { html } from "../../core/html/parser.mjs";
+import { sheetToElement } from "../../core/css/utils.mjs";
 
 class SideNav extends HTMLElement {
   static observedAttributes = ["links"];
@@ -9,7 +12,8 @@ class SideNav extends HTMLElement {
     super();
 
     this.attachShadow({ mode: "open" });
-    this.attachStyles("../components/side-nav/style.css"); // fix
+    const el = sheetToElement(style);
+    this.shadowRoot.appendChild(el);
   }
 
   get links() {
@@ -18,16 +22,6 @@ class SideNav extends HTMLElement {
 
   set links(value) {
     this.setAttribute("links", JSON.stringify(value));
-  }
-
-  attachStyles(filePath) {
-    /* extend class with method */
-    const link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.type = "text/css";
-    link.href = filePath;
-
-    this.shadowRoot.appendChild(link);
   }
 
   /* mount */

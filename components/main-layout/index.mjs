@@ -1,23 +1,19 @@
 "use strict";
-
-import { html } from "../../core/html-parser.mjs";
+/* style */
+import style from "./style.css" assert { type: "css" };
+/* core */
+import { html } from "../../core/html/parser.mjs";
+import { sheetToElement } from "../../core/css/utils.mjs";
+/* components */
+import "../side-nav/index.mjs";
 
 class MainLayout extends HTMLElement {
   constructor() {
     super();
 
     this.attachShadow({ mode: "open" });
-    this.attachStyles("../components/main-layout/style.css");
-  }
-
-  attachStyles(filePath) {
-    /* extend class with method */
-    const link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.type = "text/css";
-    link.href = filePath;
-
-    this.shadowRoot.appendChild(link);
+    const el = sheetToElement(style);
+    this.shadowRoot.appendChild(el);
   }
 
   /* mount */
@@ -34,7 +30,6 @@ class MainLayout extends HTMLElement {
     const template = html(`
       <div class="layout">
         <header class="header">
-          <h3>Header</h3>
         </header>
         <div class="main">
           <side-nav links='[{"title": "Page 1","url": "/pages/page1.html"},{"title": "Page 2","url": "/pages/page2.html"}]'>

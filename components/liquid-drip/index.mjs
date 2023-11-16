@@ -1,6 +1,9 @@
 "use strict";
-
-import { html } from "../../core/html-parser.mjs";
+/* style */
+import style from "./style.css" assert { type: "css" };
+/* core */
+import { html } from "../../core/html/parser.mjs";
+import { sheetToElement } from "../../core/css/utils.mjs";
 
 const svgCrapo = `<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="0">
   <defs>
@@ -22,17 +25,8 @@ class LiquidDrip extends HTMLElement {
     super();
 
     this.attachShadow({ mode: "open" });
-    this.attachStyles("../components/liquid-drip/style.css");
-  }
-
-  attachStyles(filePath) {
-    /* extend class with method */
-    const link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.type = "text/css";
-    link.href = filePath;
-
-    this.shadowRoot.appendChild(link);
+    const el = sheetToElement(style);
+    this.shadowRoot.appendChild(el);
   }
 
   /* mount */
